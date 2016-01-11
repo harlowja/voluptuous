@@ -130,6 +130,7 @@ class Undefined(object):
 
 
 UNDEFINED = Undefined()
+SELF = object()
 
 
 def default_factory(value):
@@ -343,6 +344,8 @@ class Schema(object):
     def _compile(self, schema):
         if schema is Extra:
             return lambda _, v: v
+        if schema is SELF:
+            return lambda _path, data: self.__call__(data)
         if isinstance(schema, Object):
             return self._compile_object(schema)
         if isinstance(schema, collections.Mapping):
